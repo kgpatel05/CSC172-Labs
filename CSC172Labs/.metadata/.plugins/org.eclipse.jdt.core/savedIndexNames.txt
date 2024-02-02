@@ -1,0 +1,4 @@
+INDEX VERSION 1.134+/Users/krishpatel/Documents/rochester/courses/spring 24/csc172/CSC172Labs/.metadata/.plugins/org.eclipse.jdt.core
+1865797976.index
+4283831159.index
+3468314333.index
