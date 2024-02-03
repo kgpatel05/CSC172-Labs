@@ -165,7 +165,7 @@ public class Lab1<T extends Comparable<T>> {
 		//Example 4:
 		//Simply removing 2 elements from a full list
 		System.out.println("EXAMPLE 4: Trying to remove a single element from the list");
-		List<String> list8 = List.of("Krish", "G", "Patel", "is", "taking", "CSC", "172", "?");
+		List<String> list8 = List.of("Krish", "?", "G", "Patel", "is", "taking", "CSC", "172", "?");
 		List<String> newList4 = Lab1.createListWithoutElements(list8, "?");
 		System.out.println("Orignal List: " + list8);
 		System.out.println("Updated List: " + newList4 + "\n");

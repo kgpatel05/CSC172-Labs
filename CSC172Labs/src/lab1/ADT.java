@@ -1,6 +1,6 @@
 package lab1;
 
-public class ADT implements Comparable{
+public class ADT implements Comparable<Object>{
 	
 	public int value;
 

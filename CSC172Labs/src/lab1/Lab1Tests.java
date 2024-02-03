@@ -95,6 +95,121 @@ class Lab1Tests {
 		
 		assertEquals(Lab1.toString(Lab1.createListWithoutElements(list, 4)), output);
 	}
+	
+	@Test
+	@DisplayName("Empty List")
+	/**
+	 * This method checks the prettyPrint method when a null list is passed
+	 */
+	void test5()
+	{
+		List<String> list = List.of();
+		String newlist = Lab1.toString(list);
+		String output = "The List is Empty\n";
+		assertEquals(newlist, output);
+	}
+	
+	@Test
+	@DisplayName("Printing a List of Booleans")
+	void test6()
+	{
+		List<Boolean> list2 = List.of(true, true, false, true, false, false);
+		String newlist = Lab1.toString(list2);
+		String output = "Printing <Boolean> List\n"
+				+ "Element 1: true\n"
+				+ "Element 2: true\n"
+				+ "Element 3: false\n"
+				+ "Element 4: true\n"
+				+ "Element 5: false\n"
+				+ "Element 6: false\n";
+		assertEquals(newlist, output);
+	}
 
+	@Test
+	@DisplayName("Printing a list of Integers")
+	void test7()
+	{
+		List<Integer> list3 = List.of(Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 3);
+		String newlist = Lab1.toString(list3);
+		String output = "Printing <Integer> List\n"
+				+ "Element 1: -2147483648\n"
+				+ "Element 2: 2147483647\n"
+				+ "Element 3: 0\n"
+				+ "Element 4: 3\n";
+		assertEquals(newlist, output);
+	}
+	
+	@Test
+	@DisplayName("Printing a list of user defined objects")
+	void test8()
+	{
+		List<ADT> list4 = List.of(new ADT(5),
+				new ADT(9),
+				new ADT(19),
+				new ADT(-43));
+		String newlist = Lab1.toString(list4);
+		String output = "Printing <ADT> List\n"
+				+ "Element 1: 5\n"
+				+ "Element 2: 9\n"
+				+ "Element 3: 19\n"
+				+ "Element 4: -43\n";
+		assertEquals(newlist, output);
+	}
+	
+	@Test
+	@DisplayName("Removing non existing element from list")
+	void test9()
+	{
+		List<String> list5 = List.of("Hello", "World", "!", "Krish");
+		List<String> newlist = Lab1.createListWithoutElements(list5, "doesntExist");
+		List<String> output = List.of("Hello", "World", "!", "Krish");
+		assertEquals(newlist, output);
+	}
+	
+	@Test
+	@DisplayName("Removing all elements in the list")
+	void test10()
+	{
+		List<Double> list6 = List.of(0.9, 0.9, 0.9, 0.9);
+		List<Double> newlist = Lab1.createListWithoutElements(list6, 0.9);
+		List<Double> output = List.of();
+		assertEquals(newlist, output);
+	}
+	
+	@Test
+	@DisplayName("Removing from an Empty List")
+	void test11()
+	{
+		List<Integer> list = List.of();
+		List<Integer> newlist = Lab1.createListWithoutElements(list, 56);
+		List<Integer> output = List.of();
+		assertEquals(newlist, output);
+
+	}
+	
+	
+	@Test
+	@DisplayName("Removing 2 elements from a full list")
+	void test12()
+	{
+		List<String> list = List.of("Krish", "G", "Patel", "is", "taking", "CSC", "172", "?", "?");
+		List<String> newlist = Lab1.createListWithoutElements(list, "?");
+		List<String> output = List.of("Krish", "G", "Patel", "is", "taking", "CSC", "172");
+		assertEquals(newlist, output);
+	}
+		
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
