@@ -1,3 +1,12 @@
+/*
+ * Krish Patel
+ * Lab #2
+ * CSC172 Introduction to Data Structures and Algorithms
+ * Prof: Monica Polak
+ * Date: 02/10/2024
+ */
+
+
 package lab2;
 
 import java.util.ArrayList;
@@ -56,6 +65,7 @@ public class Lab2 {
 	
 	private static <T> int existsIn(List<T> list, T element)
 	{
+		//this is just a helper function to find which index the element is at
 		for (int i = 0; i < list.size(); i++) 
 		{
 			if(list.get(i) == element)
@@ -101,7 +111,7 @@ public class Lab2 {
 	{
 		
 		if (n == 0) {
-            return prev2;  // Base case
+            return prev2;
         } 
 		else {
             return seriesTermRec(n - 1, (2 * prev) + (3 * prev2), prev);
