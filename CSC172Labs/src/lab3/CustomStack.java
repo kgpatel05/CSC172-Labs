@@ -1,6 +1,6 @@
 /*
  * Krish Patel
- * Lab #2
+ * Lab #3
  * CSC172 Introduction to Data Structures and Algorithms
  * Prof: Monica Polak
  * Date: 02/17/2024
@@ -29,8 +29,8 @@ public class CustomStack<T> {
     }
     
     private static class Bunny {
-    	String name;
-    	String color;
+    	private String name;
+    	private String color;
     	
     	public Bunny(String name, String color)
     	{
@@ -57,7 +57,7 @@ public class CustomStack<T> {
     	
     	public void print()
     	{
-    		System.out.println("A " + this.color + " bunny named " + this.name + " jumpped out of a burrow");
+    		System.out.println("A " + getColor() + " bunny named " + getName() + " jumped out of a burrow");
     	}
     }
 
