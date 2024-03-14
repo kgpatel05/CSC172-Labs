@@ -4,9 +4,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
 public class Conversions {
 	
+	//CONSTANTS
 	public static final int BLOCK_SIZE = 64;
 	public static final int KEY_SIZE = 56;
 	
@@ -38,70 +38,12 @@ public class Conversions {
             {"10001100", "10100001", "10001001", "00001101", "10111111", "11100110", "01000010", "01101000", "01000001", "10011001", "00101101", "00001111", "10110000", "01010100", "10111011", "00010110"}
     };
 	
-	private static ArrayList<Integer> SubstitutionS(ArrayList<Integer> binary)
-	{
-
-		if(binary.size() != 8)
-		{
-			System.out.println("Invalid input passed");
-			return null;
-		}
-			
-		//grab each value in the hexadecimal representation
-		String hex = Conversions.binaryToHexa(binary);
-		char row = hex.charAt(0);
-		char col = hex.charAt(1);
-		
-		//converting from characters to integers in range 0 to F
-		int rowNum = Integer.valueOf(row) - 48;
-		int colNum = Integer.valueOf(col) - 48;
-		
-		//if the value is > 9 then it was a letter
-		if((Integer.valueOf(row) - 48) > 9)
-		{
-			rowNum = Integer.valueOf(row) - 55;
-		}
-		if((Integer.valueOf(col) - 48) > 9)
-		{
-			colNum = Integer.valueOf(col) - 55;
-		}
-				
-		//completing the sbox transformation
-		ArrayList<Integer> subS = new ArrayList<Integer>();
-		String binaryStr = sBox[rowNum][colNum];
-		for(int i = 0; i < 8; i++)
-		{
-			subS.add(Integer.valueOf(binaryStr.charAt(i)) - 48);
-		}
-		return subS;
-	}
-	
-	private static String binaryToHexa(ArrayList<Integer> binary)
-	{
-		int len = binary.size();
-		
-		String hexa = "";
-		if(len % 4 != 0)
-		{
-			System.out.println("Incomplete octet passed");
-			return null;
-		}
-
-		for(int i = 0; i < len/4; i++)
-		{
-			int binval = 0;
-			for(int j = 0; j < 4; j++)
-			{
-				binval += Math.pow(2, 3 - j) * binary.get(4*i + j);
-			}
-			hexa = hexa + (String.valueOf(hexchars[binval]));
-			
-		}
-		
-		return hexa;
-	}
-	
-	/**
+    
+    
+    
+    //1.3 REQUIRED METHODS
+    
+    /**
 	 * This method takes in two binary sequences and applies the XOR function
 	 * @param binary1
 	 * @param binary2
@@ -142,8 +84,7 @@ public class Conversions {
 		return xor;
 		
 	}
-
-	
+    
 	/**
 	 * This function shift the binary sequence in an arraylist, left by 1 unit
 	 * @param binaryInput
@@ -155,7 +96,7 @@ public class Conversions {
 		binaryInput.remove(0);
 		return binaryInput;
 	}
-
+	
 	/**
 	 * This function permutes the provided binary sequence by the defined permutation matrix
 	 * @param binaryInput
@@ -180,6 +121,44 @@ public class Conversions {
 		return newSeq;
 	}
 
+	private static ArrayList<Integer> SubstitutionS(ArrayList<Integer> binary)
+	{
+
+		if(binary.size() != 8)
+		{
+			System.out.println("Invalid input passed");
+			return null;
+		}
+			
+		//grab each value in the hexadecimal representation
+		String hex = Conversions.binaryToHexa(binary);
+		char row = hex.charAt(0);
+		char col = hex.charAt(1);
+		
+		//converting from characters to integers in range 0 to F
+		int rowNum = Integer.valueOf(row) - 48;
+		int colNum = Integer.valueOf(col) - 48;
+		
+		//if the value is > 9 then it was a letter
+		if((Integer.valueOf(row) - 48) > 9)
+		{
+			rowNum = Integer.valueOf(row) - 55;
+		}
+		if((Integer.valueOf(col) - 48) > 9)
+		{
+			colNum = Integer.valueOf(col) - 55;
+		}
+				
+		//completing the sbox transformation
+		ArrayList<Integer> subS = new ArrayList<Integer>();
+		String binaryStr = sBox[rowNum][colNum];
+		for(int i = 0; i < 8; i++)
+		{
+			subS.add(Integer.valueOf(binaryStr.charAt(i)) - 48);
+		}
+		return subS;
+	}
+	
 	/**
 	 * This function computes the defined F round function on the provided sequence with the provided subkey
 	 * @param rightHalf
@@ -215,66 +194,6 @@ public class Conversions {
 		newSeq = Conversions.permuteIt(newSeq);
 		
 		return newSeq;
-	}
-
-	
-	/**
-	 * This function makes all 10 keys for the encryption/decryption algorithm
-	 * @param inputkey
-	 * @return
-	 */
-	public static ArrayList<ArrayList<Integer>> keyScheduleTransform(ArrayList<Integer> inputkey)
-	{
-		//validate that the input is of size 56
-		
-		if(inputkey.size() != KEY_SIZE)
-		{
-			System.out.println("INPUT OF INCORRECT SIZE");
-			return null;
-		}
-		
-		
-		//an arraylist of arraylists so that we can have an array of length 10
-		//with each index holding an arraylist of length 32 which are the keys
-		ArrayList<ArrayList<Integer>> subkeys = new ArrayList<ArrayList<Integer>>();
-		
-		
-		//creating original left and right subkeys
-		ArrayList<Integer> left = new ArrayList<Integer>();
-		ArrayList<Integer> right = new ArrayList<Integer>();
-		for(int j = 0; j < 28; j++)
-		{
-			left.add(inputkey.get(j)); //first 28 elements
-			right.add(inputkey.get(j+28)); //last 28 elements
-		}
-		
-		for(int i = 0; i < 10; i++)
-		{
-			//left shift both halves
-			left = Conversions.shiftIt(left);
-			right = Conversions.shiftIt(right);
-
-			
-			//creating the ith subkey from the first 32 elements of the left and right halves
-			ArrayList<Integer> iSubKey = new ArrayList<Integer>();
-			for(int j = 0; j < 28; j++)
-			{
-				iSubKey.add(left.get(j));
-			}
-			for(int j = 0; j < 4; j++)
-			{
-				iSubKey.add(right.get(j));
-			}
-			
-			if(iSubKey.size() != 32 || right.size() != 28 || left.size() != 28)
-			{
-				System.out.println("Incorrect input size: " + iSubKey.size());
-			}
-			
-			subkeys.add(iSubKey);
-		}
-		
-		return subkeys;
 	}
 
 	/**
@@ -335,67 +254,7 @@ public class Conversions {
 		left.addAll(right);
 		return Conversions.arrayToString(left);
 	}
-
-	private static ArrayList<Integer> hexaToBinary(String hexa)
-	{
-		int dec = 0;
-		for(int i = 0; i < hexchars.length; i++)
-		{
-			if(hexchars[i] == hexa.charAt(0))
-			{
-				dec += 16*i;
-			}
-			if(hexchars[i] == hexa.charAt(1))
-			{
-				dec += i;
-			}
-		}
-		
-		return Conversions.decimalToBinary(dec);
-	}
 	
-	public static ArrayList<Integer> decimalToBinary(int dec)
-	{
-		
-        // array to store binary number 
-		ArrayList<Integer> binaryNum = new ArrayList<Integer>();
-		int[] binary = new int[1000]; 
-		for(int i = 0; i < 1000; i++)
-		{
-			binary[i] = Integer.MAX_VALUE;
-		}
-        // counter for binary array 
-        int i = 0; 
-        while (dec > 0)  
-        { 
-            // storing remainder in binary array 
-            binary[i] = dec % 2; 
-            dec = dec / 2; 
-            i++; 
-        } 
-        
-        for(int j = 0; j < binary.length; j++)
-        {
-        	if(binary[j] == 0 || binary[j] == 1)
-        	{
-        		binaryNum.add(binary[j]);
-        	}
-        }
-        
-        if(binaryNum.size() != 8)
-        {
-        	int sizedif = 8 - binaryNum.size();
-        	for(int j = 0; j < sizedif; j++)
-        	{
-        		binaryNum.add(0);
-        	}
-        }
-        //binary array in reverse order 
-        Collections.reverse(binaryNum);
-   
-		return binaryNum;
-	}
-
 	public static String decryptBlock(String block, String key)
 	{
 		
@@ -477,6 +336,154 @@ public class Conversions {
 		}
 		
 		return decrypted;
+	}
+
+	/**
+	 * This function makes all 10 keys for the encryption/decryption algorithm storing them in an arraylist of integer arraylists
+	 * @param inputkey
+	 * @return
+	 */
+	public static ArrayList<ArrayList<Integer>> keyScheduleTransform(ArrayList<Integer> inputkey)
+	{
+		//validate that the input is of size 56
+		
+		if(inputkey.size() != KEY_SIZE)
+		{
+			System.out.println("INPUT OF INCORRECT SIZE");
+			return null;
+		}
+		
+		
+		//an arraylist of arraylists so that we can have an array of length 10
+		//with each index holding an arraylist of length 32 which are the keys
+		ArrayList<ArrayList<Integer>> subkeys = new ArrayList<ArrayList<Integer>>();
+		
+		
+		//creating original left and right subkeys
+		ArrayList<Integer> left = new ArrayList<Integer>();
+		ArrayList<Integer> right = new ArrayList<Integer>();
+		for(int j = 0; j < 28; j++)
+		{
+			left.add(inputkey.get(j)); //first 28 elements
+			right.add(inputkey.get(j+28)); //last 28 elements
+		}
+		
+		for(int i = 0; i < 10; i++)
+		{
+			//left shift both halves
+			left = Conversions.shiftIt(left);
+			right = Conversions.shiftIt(right);
+
+			
+			//creating the ith subkey from the first 32 elements of the left and right halves
+			ArrayList<Integer> iSubKey = new ArrayList<Integer>();
+			for(int j = 0; j < 28; j++)
+			{
+				iSubKey.add(left.get(j));
+			}
+			for(int j = 0; j < 4; j++)
+			{
+				iSubKey.add(right.get(j));
+			}
+			
+			if(iSubKey.size() != 32 || right.size() != 28 || left.size() != 28)
+			{
+				System.out.println("Incorrect input size: " + iSubKey.size());
+			}
+			
+			subkeys.add(iSubKey);
+		}
+		
+		return subkeys;
+	}
+	
+	
+	
+	
+	//MY HELPER FUNCTIONS
+	private static String binaryToHexa(ArrayList<Integer> binary)
+	{
+		int len = binary.size();
+		
+		String hexa = "";
+		if(len % 4 != 0)
+		{
+			System.out.println("Incomplete octet passed");
+			return null;
+		}
+
+		for(int i = 0; i < len/4; i++)
+		{
+			int binval = 0;
+			for(int j = 0; j < 4; j++)
+			{
+				binval += Math.pow(2, 3 - j) * binary.get(4*i + j);
+			}
+			hexa = hexa + (String.valueOf(hexchars[binval]));
+			
+		}
+		
+		return hexa;
+	}
+	
+	private static ArrayList<Integer> hexaToBinary(String hexa)
+	{
+		int dec = 0;
+		for(int i = 0; i < hexchars.length; i++)
+		{
+			if(hexchars[i] == hexa.charAt(0))
+			{
+				dec += 16*i;
+			}
+			if(hexchars[i] == hexa.charAt(1))
+			{
+				dec += i;
+			}
+		}
+		
+		return Conversions.decimalToBinary(dec);
+	}
+	
+	public static ArrayList<Integer> decimalToBinary(int dec)
+	{
+		
+        // array to store binary number 
+		ArrayList<Integer> binaryNum = new ArrayList<Integer>();
+		int[] binary = new int[1000]; 
+		for(int i = 0; i < 1000; i++)
+		{
+			binary[i] = Integer.MAX_VALUE;
+		}
+        // counter for binary array 
+        int i = 0; 
+        while (dec > 0)  
+        { 
+            // storing remainder in binary array 
+            binary[i] = dec % 2; 
+            dec = dec / 2; 
+            i++; 
+        } 
+        
+        for(int j = 0; j < binary.length; j++)
+        {
+        	if(binary[j] == 0 || binary[j] == 1)
+        	{
+        		binaryNum.add(binary[j]);
+        	}
+        }
+        
+        if(binaryNum.size() != 8)
+        {
+        	int sizedif = 8 - binaryNum.size();
+        	for(int j = 0; j < sizedif; j++)
+        	{
+        		binaryNum.add(0);
+        	}
+        }
+        //binary array in reverse order 
+        Collections.reverse(binaryNum);
+   
+		return binaryNum;
 	}
 
 	/**
