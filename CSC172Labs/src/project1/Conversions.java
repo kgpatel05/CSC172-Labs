@@ -39,8 +39,6 @@ public class Conversions {
     };
 	
     
-    
-    
     //1.3 REQUIRED METHODS
     
     /**
@@ -49,36 +47,36 @@ public class Conversions {
 	 * @param binary2
 	 * @return
 	 */
-	private static ArrayList<Integer> xorIt(ArrayList<Integer> binary1, ArrayList<Integer> binary2)
+	public static String xorIt(String binary1, String binary2)
 	{
-		ArrayList<Integer> xor = new ArrayList<Integer>();
-		int dif = Math.abs(binary1.size() - binary2.size());
-		if(binary1.size() > binary2.size())
+		int dif = Math.abs(binary1.length() - binary2.length());
+		if(binary1.length() > binary2.length())
 		{
 			for(int i = 0; i < dif; i++)
 			{
-				binary2.add(0, 0);
+				binary2 = "0" + binary2;
 			}
 		}
-		else if(binary2.size() > binary1.size())
+		else if(binary2.length() > binary1.length())
 		{
 			for(int i = 0; i < dif; i++)
 			{
-				binary1.add(0,0);
+				binary1 = "0" + binary1;
 			}
 				
 		}
 		
 		//now both sequences are of the same length
-		for(int i = 0; i < binary1.size(); i++)
+		String xor = "";
+		for(int i = 0; i < binary1.length(); i++)
 		{
-			if((binary1.get(i) == binary2.get(i)))
+			if((binary1.charAt(i) == binary2.charAt(i)))
 			{
-				xor.add(0);
+				xor += "0";
 			}
 			else
 			{
-				xor.add(1);
+				xor += "1";
 			}
 		}
 		return xor;
@@ -86,47 +84,54 @@ public class Conversions {
 	}
     
 	/**
-	 * This function shift the binary sequence in an arraylist, left by 1 unit
+	 * This function shift the binary sequence left by 1 unit
 	 * @param binaryInput
 	 * @return
 	 */
-	private static ArrayList<Integer> shiftIt(ArrayList<Integer> binaryInput)
+	public static String shiftIt(String binaryInput)
 	{
-		binaryInput.add(0);
-		binaryInput.remove(0);
-		return binaryInput;
+		String str = binaryInput.substring(1) + "0";
+		
+		return str;
 	}
 	
 	/**
-	 * This function permutes the provided binary sequence by the defined permutation matrix
+	 * This function permutes the provided binary sequence by the defined permutation matrix (pTransform)
 	 * @param binaryInput
 	 * @return
 	 */
-	private static ArrayList<Integer> permuteIt(ArrayList<Integer> binaryInput)
+	public static String permuteIt(String binaryInput)
 	{
 		
-		if(binaryInput.size() != 32)
+		if(binaryInput.length() != 32)
 		{
-			System.out.println("Invalid input");
+			System.out.println("INVALID permuteIt INPUT");
 			return null;
 		}
 		
 		//each number represents which element should  be in what order
 		//i.e. element at index 16 of input is index 1 of the new sequence
-		ArrayList<Integer> newSeq = new ArrayList<Integer>();
+		String newSeq = "";
 		for(int i = 0; i < 32; i++)
 		{
-			newSeq.add(binaryInput.get(pTransform[i]-1));
+			//subtract by 1 bc pTransform is 1 based but java indexes are 0 based
+			newSeq += (binaryInput.charAt(pTransform[i]-1));
 		}
 		return newSeq;
 	}
 
-	private static ArrayList<Integer> SubstitutionS(ArrayList<Integer> binary)
+	/**
+	 * This function takes in a binary sequence, converts it into hexadecimal and then computes the correct
+	 * permutation based on the rijndael matrix 
+	 * @param binary
+	 * @return
+	 */
+	public static String SubstitutionS(String binary)
 	{
 
-		if(binary.size() != 8)
+		if(binary.length() != 8)
 		{
-			System.out.println("Invalid input passed");
+			System.out.println("INVALID INPUT PASSED TO SubstitutionS");
 			return null;
 		}
 			
@@ -136,10 +141,15 @@ public class Conversions {
 		char col = hex.charAt(1);
 		
 		//converting from characters to integers in range 0 to F
+		//this accounts for if the value was an integer from 0 to 9
+		//since Integer.valueOf returns the ascii value
+		//ascii of '0' is 48
 		int rowNum = Integer.valueOf(row) - 48;
 		int colNum = Integer.valueOf(col) - 48;
 		
 		//if the value is > 9 then it was a letter
+		//ascii of 'A' is 65; subtract by 55 such that
+		//A correspondes to 10
 		if((Integer.valueOf(row) - 48) > 9)
 		{
 			rowNum = Integer.valueOf(row) - 55;
@@ -150,13 +160,7 @@ public class Conversions {
 		}
 				
 		//completing the sbox transformation
-		ArrayList<Integer> subS = new ArrayList<Integer>();
-		String binaryStr = sBox[rowNum][colNum];
-		for(int i = 0; i < 8; i++)
-		{
-			subS.add(Integer.valueOf(binaryStr.charAt(i)) - 48);
-		}
-		return subS;
+		return sBox[rowNum][colNum];
 	}
 	
 	/**
@@ -165,30 +169,25 @@ public class Conversions {
 	 * @param subkey
 	 * @return
 	 */
-	public static ArrayList<Integer> functionF(ArrayList<Integer> rightHalf, ArrayList<Integer> subkey)
+	public static String functionF(String rightHalf, String subkey)
 	{
-		if( rightHalf.size() != BLOCK_SIZE/2 || subkey.size() != BLOCK_SIZE/2)
+		if( rightHalf.length() != BLOCK_SIZE/2 || subkey.length() != BLOCK_SIZE/2)
 		{
-			System.out.println("The righthalf sequence or the subkey are not the correct lengths");
+			System.out.println("INVALID SIZE OF RIGHTHALF OR SUBKEY PASSED INTO functionF");
 			return null;
 		}
 		
-		
 		//conducting xor with the subkey
-		ArrayList<Integer> postXor = Conversions.xorIt(rightHalf, subkey);
-		ArrayList<Integer> newSeq = new ArrayList<Integer>();
+		String postXor = Conversions.xorIt(rightHalf, subkey);
+		String newSeq = "";
 		//prepping to compute the Rinjndael S-Box transformation
 		for(int i = 0 ; i < 4; i++)
 		{
 			//sublist is the groups of 8 elements from the postXor sequence
-			ArrayList<Integer> sublist = new ArrayList<Integer>();
-			for(int j = 0; j < 8; j++)
-			{
-				sublist.add(postXor.get((8*i) + j));
-			}
+			String sublist = postXor.substring(8*i, 8*i + 8);
 			
 			//computing the Rijndael X-box transformation
-			newSeq.addAll(Conversions.SubstitutionS(sublist));
+			newSeq += (Conversions.SubstitutionS(sublist));
 		}
 		
 		newSeq = Conversions.permuteIt(newSeq);
@@ -206,120 +205,102 @@ public class Conversions {
 	{
 		if(block.length() != BLOCK_SIZE)
 		{
-			System.out.println("BAD BLOCK SIZE INPUT. Expected Length " + BLOCK_SIZE + ".");
+			System.out.println("BAD BLOCK SIZE INPUT to encryptBlock. Expected Length " + BLOCK_SIZE + ".");
 			return null;
 		}
 		if(inputKey.length() != KEY_SIZE)
 		{
-			System.out.println("BAD KEY INPUT. Expected Length " + KEY_SIZE + ".");
+			System.out.println("BAD KEY SIZE INPUT to encryptBlock. Expected Length " + KEY_SIZE + ".");
 			return null;
 		}
-		
-		ArrayList<Integer> blockArrayList = new ArrayList<Integer>();
-		for(int i = 0; i < block.length(); i++)
-		{
-			blockArrayList.add(block.charAt(i) - 48);
-		}
-		ArrayList<Integer> keyArray = new ArrayList<Integer>();
-//		System.out.println(Conversions.arrayToString(blockArrayList));
-		for(int i = 0; i < inputKey.length(); i++)
-		{
-			keyArray.add(inputKey.charAt(i) - 48);
-		}
-//		System.out.println(Conversions.arrayToString(keyArray));
+			
 		//initialization of variables
-		ArrayList<Integer> left = new ArrayList<Integer>();
-		ArrayList<Integer> right = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> subkeys = Conversions.keyScheduleTransform(keyArray);
+		String[] subkeys = Conversions.keyScheduleTransform(inputKey);
 		//creating left and right sequences
-		for(int i = 0; i < (BLOCK_SIZE/2); i++) //block_size/2 will be 32
-		{
-			left.add(i, blockArrayList.get(i));
-			right.add(i, blockArrayList.get(i+(BLOCK_SIZE/2)));
-		}
-		
+		String leftBlock = block.substring(0, (BLOCK_SIZE/2));
+		String rightBlock = block.substring((BLOCK_SIZE/2));
 		
 		for(int i = 0; i < 10; i++)
 		{
-			ArrayList<Integer> tempLeft = left;
-			left = right;
+			String tempLeft = leftBlock;
+			leftBlock = rightBlock;
 			
 			//put right half through the functionF with the first subkey
-			ArrayList<Integer> newseq = Conversions.functionF(right, subkeys.get(i));
+			String newseq = Conversions.functionF(rightBlock, subkeys[i]);
 			//right block becomes the left block xored with the f(prev right)
-			right = Conversions.xorIt(tempLeft, newseq);
+			rightBlock = Conversions.xorIt(tempLeft, newseq);
 		}
 		
 		//finally combine the two left and right sequences
-		left.addAll(right);
-		return Conversions.arrayToString(left);
+		leftBlock += rightBlock;
+		return leftBlock; //return as a string
 	}
-	
+
+	/**
+	 * This function decrypts the block using the provided key
+	 * @param block
+	 * @param key
+	 * @return
+	 */
 	public static String decryptBlock(String block, String key)
 	{
 		
-		ArrayList<Integer> blockArrayList = new ArrayList<Integer>();
-		for(int i = 0; i < block.length(); i++)
-		{
-			blockArrayList.add(block.charAt(i) - 48);
-		}
-		ArrayList<Integer> keyArray = new ArrayList<Integer>();
-//		System.out.println(Conversions.arrayToString(blockArrayList));
-		for(int i = 0; i < key.length(); i++)
-		{
-			keyArray.add(key.charAt(i) - 48);
-		}
+		String[] keys = Conversions.keyScheduleTransform(key);
 		
-		ArrayList<ArrayList<Integer>> keys = Conversions.keyScheduleTransform(keyArray);
-		
-		if(keys.size() != 10) System.out.println("SOMETHING BAD");
-		
-		//populate the first left and right values
-		ArrayList<Integer> left = new ArrayList<Integer>();
-		ArrayList<Integer> right = new ArrayList<Integer>();
-		for(int i = 0; i < BLOCK_SIZE/2; i++)
-		{
-			left.add(blockArrayList.get(i));
-			right.add(blockArrayList.get(i + BLOCK_SIZE/2));
-		}
+		//populate the first left and right value
+		String left = block.substring(0, (BLOCK_SIZE/2));
+		String right = block.substring(BLOCK_SIZE/2);
 		
 		for(int i = 0; i < 10; i++)
 		{
-			ArrayList<Integer> tempRight = right;
+			String tempRight = right;
 			right = left;
-			left = Conversions.xorIt(Conversions.functionF(left, keys.get(9-i)), tempRight);
+			left = Conversions.xorIt(Conversions.functionF(left, keys[9-i]), tempRight);
 		}
 		
-		
 		//combine both halves
-		left.addAll(right);
-		
-		return Conversions.arrayToString(left);
+		left += right;
+		return left;
 	}
 	
+	/**
+	 * This function takes in a longBinaryInput and inputkey and encrypts the input in batches of 64
+	 * elements using the encryptBlock() function
+	 * @param longBinaryInput
+	 * @param inputKey
+	 * @return
+	 */
 	public static String encryption(String longBinaryInput, String inputKey)
 	{
 		
-		String encrypted = "";
-		String temp = "";
+		String block = "", encrypted = "";
 
+		//encrypt in 64 bit blocks
 		int i;
-		for(i = 0 ; i < longBinaryInput.length() / BLOCK_SIZE; i++)
+		for(i = 0 ; i < (longBinaryInput.length() / BLOCK_SIZE); i++)
 		{
-			temp = longBinaryInput.substring(BLOCK_SIZE * i, (BLOCK_SIZE * i) + BLOCK_SIZE);
-			encrypted += (Conversions.encryptBlock(temp, inputKey));
+			block = longBinaryInput.substring(BLOCK_SIZE * i, (BLOCK_SIZE * i) + BLOCK_SIZE);
+			encrypted += (Conversions.encryptBlock(block, inputKey));
 		}
 		
-		temp = longBinaryInput.substring(i * BLOCK_SIZE);
+		//encrypt remaining less than 64 bit block
+		block = longBinaryInput.substring(i * BLOCK_SIZE);
 		for(int j = 0; j < BLOCK_SIZE - (longBinaryInput.length() - (i * BLOCK_SIZE)); j++)
 		{
-			temp = "0" + temp;
+			block = "0" + block;
 		}
-		encrypted += (Conversions.encryptBlock(temp, inputKey));
+		encrypted += (Conversions.encryptBlock(block, inputKey));
 
 		return encrypted;
 	}
 
+	/**
+	 * This function takes in a longBinaryInput and inputkey and decrypts the input in batches of 64
+	 * elements using the decryptBlock() function
+	 * @param longBinaryInput
+	 * @param inputKey
+	 * @return
+	 */
 	public static String decryption(String longBinaryInput, String inputKey)	
 	{
 		
@@ -343,72 +324,56 @@ public class Conversions {
 	 * @param inputkey
 	 * @return
 	 */
-	public static ArrayList<ArrayList<Integer>> keyScheduleTransform(ArrayList<Integer> inputkey)
+	public static String[] keyScheduleTransform(String inputKey)
 	{
 		//validate that the input is of size 56
-		
-		if(inputkey.size() != KEY_SIZE)
+		if(inputKey.length() != KEY_SIZE)
 		{
-			System.out.println("INPUT OF INCORRECT SIZE");
+			System.out.println("INPUT OF keyScheduleTransform INCORRECT SIZE");
 			return null;
 		}
 		
-		
-		//an arraylist of arraylists so that we can have an array of length 10
-		//with each index holding an arraylist of length 32 which are the keys
-		ArrayList<ArrayList<Integer>> subkeys = new ArrayList<ArrayList<Integer>>();
-		
+		String[] subKeys = new String[10];
 		
 		//creating original left and right subkeys
-		ArrayList<Integer> left = new ArrayList<Integer>();
-		ArrayList<Integer> right = new ArrayList<Integer>();
-		for(int j = 0; j < 28; j++)
-		{
-			left.add(inputkey.get(j)); //first 28 elements
-			right.add(inputkey.get(j+28)); //last 28 elements
-		}
+		String leftKey = inputKey.substring(0, (KEY_SIZE/2));
+		String rightKey = inputKey.substring(KEY_SIZE/2);
 		
 		for(int i = 0; i < 10; i++)
 		{
 			//left shift both halves
-			left = Conversions.shiftIt(left);
-			right = Conversions.shiftIt(right);
+			leftKey = Conversions.shiftIt(leftKey);
+			rightKey = Conversions.shiftIt(rightKey);
 
+			//Creating the i(th) subkey from the first 32 elements of the left and right halves
+			String iSubKey = leftKey;
+			iSubKey += rightKey.substring(0, 4);
 			
-			//creating the ith subkey from the first 32 elements of the left and right halves
-			ArrayList<Integer> iSubKey = new ArrayList<Integer>();
-			for(int j = 0; j < 28; j++)
-			{
-				iSubKey.add(left.get(j));
-			}
-			for(int j = 0; j < 4; j++)
-			{
-				iSubKey.add(right.get(j));
-			}
-			
-			if(iSubKey.size() != 32 || right.size() != 28 || left.size() != 28)
-			{
-				System.out.println("Incorrect input size: " + iSubKey.size());
-			}
-			
-			subkeys.add(iSubKey);
+			//adding the i(th) subkey to the array of keys
+			subKeys[i] = (iSubKey);
 		}
 		
-		return subkeys;
+		return subKeys;
 	}
 	
 	
 	
 	
 	//MY HELPER FUNCTIONS
-	private static String binaryToHexa(ArrayList<Integer> binary)
+	/**
+	 * This method converts a binary sequence into a String of hexadecimal values
+	 * i.e. converts from base 2 to base 16
+	 * @param binary
+	 * @return
+	 */
+	public static String binaryToHexa(String binary)
 	{
-		int len = binary.size();
+		int len = binary.length();
 		
 		String hexa = "";
 		if(len % 4 != 0)
 		{
-			System.out.println("Incomplete octet passed");
+			System.out.println("Incomplete quartet passed");
 			return null;
 		}
 
@@ -417,7 +382,7 @@ public class Conversions {
 			int binval = 0;
 			for(int j = 0; j < 4; j++)
 			{
-				binval += Math.pow(2, 3 - j) * binary.get(4*i + j);
+				binval += Math.pow(2, 3 - j) * (binary.charAt(4*i + j)-48);
 			}
 			hexa = hexa + (String.valueOf(hexchars[binval]));
 			
@@ -425,64 +390,93 @@ public class Conversions {
 		
 		return hexa;
 	}
-	
-	private static ArrayList<Integer> hexaToBinary(String hexa)
+		
+	/**
+     * this function reads data from a file and returns it as a string
+     * @param filepath
+     * @return
+     * @throws IOException
+     */
+	public static String getFileData(String filepath) throws IOException 
 	{
-		int dec = 0;
-		for(int i = 0; i < hexchars.length; i++)
+	  StringBuilder sb = new StringBuilder();
+	  FileReader fr = new FileReader(filepath);
+	  BufferedReader br = new BufferedReader(fr);
+	  String line;
+	  while ((line = br.readLine()) != null) 
+	  {
+	    sb.append(line);
+	  }
+	  br.close();
+	  return sb.toString().trim();
+	}
+
+	/**
+	 * This function takes a String and converts each character to its binary form
+	 * and returns the binary sequences appended together in a string
+	 * @param s any String input
+	 * @return
+	 */
+	public static String stringToBinaryString(String s)
+	{
+		String bin = "";
+		for(int i = 0 ; i < s.length(); i++)
 		{
-			if(hexchars[i] == hexa.charAt(0))
+			char charAtI = s.charAt(i);
+			ArrayList<Integer> binArray = Conversions.decimalToBinary(charAtI);
+			for(int j = 0 ; j < binArray.size(); j++)
 			{
-				dec += 16*i;
-			}
-			if(hexchars[i] == hexa.charAt(1))
-			{
-				dec += i;
+				bin += binArray.get(j);
 			}
 		}
-		
-		return Conversions.decimalToBinary(dec);
+		return bin;
 	}
 	
+	/**
+	 * This function converts any base 10 integer input into base 2
+	 * and returns this value as an ArrayList of integers
+	 * @param dec
+	 * @return
+	 */
 	public static ArrayList<Integer> decimalToBinary(int dec)
 	{
 		
-        // array to store binary number 
+       // array to store binary number 
 		ArrayList<Integer> binaryNum = new ArrayList<Integer>();
 		int[] binary = new int[1000]; 
 		for(int i = 0; i < 1000; i++)
 		{
 			binary[i] = Integer.MAX_VALUE;
 		}
-        // counter for binary array 
-        int i = 0; 
-        while (dec > 0)  
-        { 
-            // storing remainder in binary array 
-            binary[i] = dec % 2; 
-            dec = dec / 2; 
-            i++; 
-        } 
-        
-        for(int j = 0; j < binary.length; j++)
-        {
-        	if(binary[j] == 0 || binary[j] == 1)
-        	{
-        		binaryNum.add(binary[j]);
-        	}
-        }
-        
-        if(binaryNum.size() != 8)
-        {
-        	int sizedif = 8 - binaryNum.size();
-        	for(int j = 0; j < sizedif; j++)
-        	{
-        		binaryNum.add(0);
-        	}
-        }
-        //binary array in reverse order 
-        Collections.reverse(binaryNum);
-   
+       // counter for binary array 
+       int i = 0; 
+       while (dec > 0)  
+       { 
+           // storing remainder in binary array 
+           binary[i] = dec % 2; 
+           dec = dec / 2; 
+           i++; 
+       } 
+       
+       for(int j = 0; j < binary.length; j++)
+       {
+       	if(binary[j] == 0 || binary[j] == 1)
+       	{
+       		binaryNum.add(binary[j]);
+       	}
+       }
+       
+       if(binaryNum.size() != 8)
+       {
+       	int sizedif = 8 - binaryNum.size();
+       	for(int j = 0; j < sizedif; j++)
+       	{
+       		binaryNum.add(0);
+       	}
+       }
+       //binary array in reverse order 
+       Collections.reverse(binaryNum);
+  
 		return binaryNum;
 	}
 
@@ -500,30 +494,12 @@ public class Conversions {
 		}
 		return s;
 	}
-	
-	public static String stringToBinaryString(String s)
-	{
-		String bin = "";
-		for(int i = 0 ; i < s.length(); i++)
-		{
-			char charAtI = s.charAt(i);
-			ArrayList<Integer> binArray = Conversions.decimalToBinary(charAtI);
-			for(int j = 0 ; j < binArray.size(); j++)
-			{
-				bin += binArray.get(j);
-			}
-		}
-		return bin;
-	}
-	
-	public static ArrayList<Integer> stringToArray(String binary)
-	{
-		ArrayList<Integer> array = new ArrayList<Integer>();
-		for(int i = 0 ; i < binary.length(); i++)
-		{
-			 array.add((Integer.valueOf(binary.charAt(i) - 48)));
-		}
-		return array;
-	}
 }
 	
+
+
+
+
+
+
+
