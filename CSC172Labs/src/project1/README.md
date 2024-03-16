@@ -1,4 +1,4 @@
-#Project 1 Encryption and Decryption Algorithm
+# Project 1 Encryption and Decryption Algorithm
 Krish Patel
 CSC 172 Data Structures and Algorithms
 
