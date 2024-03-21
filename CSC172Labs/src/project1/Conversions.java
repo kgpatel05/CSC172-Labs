@@ -358,7 +358,6 @@ public class Conversions {
 	
 	
 	
-	
 	//MY HELPER FUNCTIONS
 	/**
 	 * This method converts a binary sequence into a String of hexadecimal values
@@ -495,11 +494,3 @@ public class Conversions {
 		return s;
 	}
 }
-	
-
-
-
-
-
-
-
