@@ -1,5 +1,6 @@
 package project2;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 public class SurveyDataAnalyzer 
@@ -39,6 +40,11 @@ public class SurveyDataAnalyzer
             }
             genderDistribution[gend - 1]++;
         }
+
+        System.out.println("Gender Distribution");
+        System.out.println("F, M, O, Unknown");
+        System.out.println(Arrays.toString(genderDistribution));
+        System.out.println();
         return genderDistribution;
     }
 
@@ -53,6 +59,10 @@ public class SurveyDataAnalyzer
             }
             ages[table.table[i].getValue().getAge() - 1]++;
         }
+        System.out.println("Age Distribution");
+        System.out.println("<30 years old, 30-45 years old, 45-60 years old, >60 years old");
+        System.out.println(Arrays.toString(ages));
+        System.out.println();
         return ages;
     }    
 
@@ -67,6 +77,10 @@ public class SurveyDataAnalyzer
             }
             residence[table.table[i].getValue().getResidence() - 1]++;
         }
+        System.out.println("Residence Distribution");
+        System.out.println("Village, town up to 100,000, town w/ 100,000-500,000, city w/ 500,000+");
+        System.out.println(Arrays.toString(residence));
+        System.out.println();
         return residence;
     }    
 
@@ -81,6 +95,10 @@ public class SurveyDataAnalyzer
             }
             education[table.table[i].getValue().getEducation() - 1]++;
         }
+        System.out.println("Education Distribution");
+        System.out.println("Primary, Vocational, Secondary, Higher");
+        System.out.println(Arrays.toString(education));
+        System.out.println();
         return education;
     }
 
@@ -95,6 +113,10 @@ public class SurveyDataAnalyzer
             }
             income[table.table[i].getValue().getIncomeSource() - 1]++;
         }
+        System.out.println("Income Distribution");
+        System.out.println("Employment, Pension, Retirement, Other");
+        System.out.println(Arrays.toString(income));
+        System.out.println();
         return income;
     }
 
@@ -123,6 +145,10 @@ public class SurveyDataAnalyzer
             }
             smoker[table.table[i].getValue().getSmoker()]++;
         }
+        System.out.println("Smoker Distribution");
+        System.out.println("Not Smoker, Smoker");
+        System.out.println(Arrays.toString(smoker));
+        System.out.println();
         return smoker;
     }
 
@@ -139,6 +165,9 @@ public class SurveyDataAnalyzer
             quality += table.table[i].getValue().getQuality();
             j++;
         }
+        System.out.println("General Life Quality Distribution");
+        System.out.println(quality/j);
+        System.out.println();
         return quality / j;
     }
 
@@ -180,6 +209,12 @@ public class SurveyDataAnalyzer
         quality[1] = quality[1] / M;
         quality[2] = quality[2] / O;
         quality[3] = quality[3] / unknown;
+
+        System.out.println("Life Quality Distribution based on Gender");
+        System.out.println("F, M, O, unknown");
+        System.out.println(Arrays.toString(quality));
+        System.out.println();
+
         return quality;
     }
 
@@ -221,6 +256,12 @@ public class SurveyDataAnalyzer
         quality[1] = quality[1] / young;
         quality[2] = quality[2] / older;
         quality[3] = quality[3] / oldest;
+
+        System.out.println("Life Quality Distribution based on Age");
+        System.out.println("< 30 Age, 30-45, 45-60, 60+");
+        System.out.println(Arrays.toString(quality));
+        System.out.println();
+
         return quality;
     }
     
@@ -262,6 +303,12 @@ public class SurveyDataAnalyzer
         quality[1] = quality[1] / b;
         quality[2] = quality[2] / c;
         quality[3] = quality[3] / d;
+
+        System.out.println("Life Quality Distribution based on Residence");
+        System.out.println("Village, town < 100k, town 100k-500k, city 500k+");
+        System.out.println(Arrays.toString(quality));
+        System.out.println();
+
         return quality;
     }
 
@@ -303,6 +350,12 @@ public class SurveyDataAnalyzer
         quality[1] = quality[1] / b;
         quality[2] = quality[2] / c;
         quality[3] = quality[3] / d;
+
+        System.out.println("Life Quality Distribution based on Education");
+        System.out.println("primary, vocational, secondary, higher");
+        System.out.println(Arrays.toString(quality));
+        System.out.println();
+
         return quality;
     }
 
@@ -344,6 +397,12 @@ public class SurveyDataAnalyzer
         quality[1] = quality[1] / b;
         quality[2] = quality[2] / c;
         quality[3] = quality[3] / d;
+
+        System.out.println("Life Quality Distribution based on Income");
+        System.out.println("Employee, Pension, Retirement, Other");
+        System.out.println(Arrays.toString(quality));
+        System.out.println();
+
         return quality;
     }
 
@@ -385,6 +444,12 @@ public class SurveyDataAnalyzer
         quality[1] = quality[1] / b;
         quality[2] = quality[2] / c;
         quality[3] = quality[3] / d;
+
+        System.out.println("Life Qualtiy Distribution based on Maritial Status");
+        System.out.println("Single, Married, Divorced, Widowed");
+        System.out.println(Arrays.toString(quality));
+        System.out.println();
+
         return quality;
     }
     
@@ -416,9 +481,14 @@ public class SurveyDataAnalyzer
         }
         quality[0] = quality[0] / b;
         quality[1] = quality[1] / a;
-        System.out.println(quality[0]);
-        System.out.println(quality[1]);
+
+        System.out.println("Life Quality Distribution based on Smoking");
+        System.out.println("Not Smoker, Smoker");
+        System.out.println(Arrays.toString(quality));
+        System.out.println();
+
         return quality;
+
     }
 
     public String[] mostCommonTreatment()
@@ -487,6 +557,10 @@ public class SurveyDataAnalyzer
             }
         }
 
+        System.out.println("Most Common Treatments: " + treatmentNames);
+        System.out.println(Arrays.toString(treatmentNames));
+        System.out.println();
+
         return treatmentNames;
     }
 
@@ -541,40 +615,44 @@ public class SurveyDataAnalyzer
         
 
 
-        String[] treatmentNames = new String[7];
+        String[] symptomnames = new String[7];
         for (int i = 0; i < treatments.length; i++)
         {
             if(treatments[i] == a)
             {
-                treatmentNames[Math.abs(i-7) - 1] = "Hoarseness";
+                symptomnames[Math.abs(i-7) - 1] = "Hoarseness";
             }
             else if(treatments[i] == b)
             {
-                treatmentNames[Math.abs(i-7) - 1] = "ChestPain";
+                symptomnames[Math.abs(i-7) - 1] = "ChestPain";
             }
             else if(treatments[i] == c)
             {
-                treatmentNames[Math.abs(i-7) - 1] = "ShortnessOfBreath";
+                symptomnames[Math.abs(i-7) - 1] = "ShortnessOfBreath";
             }
             else if(treatments[i] == d)
             {
-                treatmentNames[Math.abs(i-7) - 1] = "None";
+                symptomnames[Math.abs(i-7) - 1] = "None";
             }
             else if(treatments[i] == e)
             {
-                treatmentNames[Math.abs(i-7) - 1] = "Weakness";
+                symptomnames[Math.abs(i-7) - 1] = "Weakness";
             }
             else if(treatments[i] == f)
             {
-                treatmentNames[Math.abs(i-7) - 1] = "Cough";
+                symptomnames[Math.abs(i-7) - 1] = "Cough";
             }
             else if(treatments[i] == g)
             {
-                treatmentNames[Math.abs(i-7) - 1] = "CoughingUpBlood";
+                symptomnames[Math.abs(i-7) - 1] = "CoughingUpBlood";
             }
         }
 
-        return treatmentNames;
+        System.out.println("Most Common Symptoms");
+        System.out.println(Arrays.toString(symptomnames));
+        System.out.println();
+
+        return symptomnames;
     }
 
     public String[] mostCommonLifeAspects()
@@ -652,6 +730,10 @@ public class SurveyDataAnalyzer
             }
         }
 
+        System.out.println("Most Common Life Problems due to Illness");
+        System.out.println(Arrays.toString(lifeAspects));
+        System.out.println();
+
         return lifeAspects;
     }
 
@@ -680,8 +762,12 @@ public class SurveyDataAnalyzer
 
         quality[0] = quality[0]/a;
         quality[1] = quality[1]/b;
-        System.out.println(quality[0]);
-        System.out.println(quality[1]);
+
+        System.out.println("Life Quality Distribution");
+        System.out.println("Single people living in city of over 500000 inhabitants, Married people living in village or town up to 100000 inhabitant");
+        System.out.println(Arrays.toString(quality));
+        System.out.println();
+
         return quality;
     }
 
@@ -723,11 +809,83 @@ public class SurveyDataAnalyzer
         quality[1] = quality[1] / b;
         quality[2] = quality[2] / c;
         quality[3] = quality[3] / d;
+
+        System.out.println("Life Quality Distribution based on indiv. responses");
+        System.out.println("said Very Good, Good, Bad, Very Bad");
+        System.out.println(Arrays.toString(quality));
+        System.out.println();
+
         return quality;
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws FileNotFoundException
     {
+        Tests testInstance = new Tests();
+        testInstance.analyzer = new SurveyDataAnalyzer(ReadFile.readResponsesFromFile("src/project2/responses.txt"));
+        System.out.println("Testing method 1:");
+        int[] test1 = testInstance.analyzer.genderDistribution(); // Call the method to get the test results
+
+        System.out.println("Testing method 2:");
+        int[] test2 = testInstance.analyzer.ageGroupDistribution(); // Call the method to get the test results
+
+        System.out.println("Testing method 3:");
+        int[] test3 = testInstance.analyzer.residenceDistribution(); // Call the method to get the test results
+
+        System.out.println("Testing method 4:");
+        int[] test4 = testInstance.analyzer.educationDistribution(); // Call the method to get the test results
+
+        System.out.println("Testing method 5:");
+        int[] test5 = testInstance.analyzer.incomeDistribution(); // Call the method to get the test results
+
+        System.out.println("Testing method 6:");
+        int[] test6 = testInstance.analyzer.maritalDistribution(); // Call the method to get the test results
+
+        System.out.println("Testing method 7:");
+        int[] test7 = testInstance.analyzer.smokerDistribution(); // Call the method to get the test results
+
+
+        System.out.println("Testing method 8:");
+        double test8 = testInstance.analyzer.lifeQualityGeneral(); // Call the method to get the test results
+
+
+        System.out.println("Testing method 9:");
+        double[] test9 = testInstance.analyzer.lifeQualityGenderBased(); // Call the method to get the test results
+
+        System.out.println("Testing method 10:");
+        double[] test10 = testInstance.analyzer.lifeQualityAgeBased(); // Call the method to get the test results
+
+
+        System.out.println("Testing method 11:");
+        double[] test11 = testInstance.analyzer.lifeQualityResidenceBased(); // Call the method to get the test results
+
+        System.out.println("Testing method 12:");
+        double[] test12 = testInstance.analyzer.lifeQualityEducationBased(); // Call the method to get the test results
+
+        System.out.println("Testing method 13:");
+        double[] test13 = testInstance.analyzer.lifeQualityIncomeBased(); // Call the method to get the test results
+
+        System.out.println("Testing method 14:");
+        double[] test14 = testInstance.analyzer.lifeQualityMaritalBased(); // Call the method to get the test results
+
+        System.out.println("Testing method 15:");
+        double[] test15 = testInstance.analyzer.lifeQualitySmokerBased(); // Call the method to get the test results
+
+
+        System.out.println("Testing method 16:");
+        String[] test16 = testInstance.analyzer.mostCommonTreatment(); // Call the method to get the test results
+
+        System.out.println("Testing method 17:");
+        String[] test17 = testInstance.analyzer.mostCommonSymptoms(); // Call the method to get the test results
+
+        System.out.println("Testing method 18:");
+        String[] test18 = testInstance.analyzer.mostCommonLifeAspects(); // Call the method to get the test results
+
+
+        System.out.println("Testing method 19:");
+        double[] test19 = testInstance.analyzer.lifeQualityMixConditionsBased(); // Call the method to get the test results
+
+        System.out.println("Testing method 20:");
+        double[] test20 = testInstance.analyzer.lifeQualityResponseBased(); // Call the method to get the test results
 
     }
 }

@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class Tests {
 
-    private SurveyDataAnalyzer analyzer; 
+    SurveyDataAnalyzer analyzer; 
 
     public static void main(String[] args) throws FileNotFoundException {
         Tests testInstance = new Tests();
